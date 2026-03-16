@@ -1,59 +1,45 @@
-const express = require("express")
-const cors = require("cors")
-const bodyParser = require("body-parser")
-const { v4: uuidv4 } = require("uuid")
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Instagram Service Panel</title>
+</head>
+<body>
 
-const app = express()
+<h2>Instagram Service Panel</h2>
 
-app.use(cors())
-app.use(bodyParser.json())
+<div>
+    <label>Instagram Username</label><br>
+    <input id="user" type="text" placeholder="enter username"><br><br>
 
-let orders = []
+    <label>Select Service</label><br>
+    <select id="service">
+        <option value="likes">Post Likes</option>
+        <option value="followers">Profile Promotion</option>
+        <option value="views">Video Views</option>
+    </select>
+    <br><br>
 
-app.get("/", (req,res)=>{
-    res.send("Social Media Panel API Running")
-})
+    <label>Amount</label><br>
+    <input id="amount" type="number" placeholder="enter number"><br><br>
 
-app.post("/create-order",(req,res)=>{
+    <button onclick="sendRequest()">Send Request</button>
+</div>
 
-    const {username, service, amount} = req.body
+<p id="msg"></p>
 
-    if(!username || !service || !amount){
-        return res.status(400).json({message:"Missing data"})
-    }
+<script>
+function sendRequest() {
+    const user = document.getElementById("user").value;
+    const service = document.getElementById("service").value;
+    const amount = document.getElementById("amount").value;
 
-    const order = {
-        id: uuidv4(),
-        username: username,
-        service: service,
-        amount: amount,
-        status: "pending",
-        date: new Date()
-    }
+    document.getElementById("msg").innerText =
+        "Your request is saved. Connect this panel with your backend to process it.";
+}
+</script>
 
-    orders.push(order)
-
-    res.json({
-        message:"Order created",
-        order:order
-    })
-
-})
-
-app.get("/orders",(req,res)=>{
-    res.json(orders)
-})
-
-app.get("/order/:id",(req,res)=>{
-    const order = orders.find(o=>o.id===req.params.id)
-
-    if(!order){
-        return res.status(404).json({message:"Order not found"})
-    }
-
-    res.json(order)
-})
-
+</body>
+</html>
 app.post("/update-status",(req,res)=>{
 
     const {id,status} = req.body
